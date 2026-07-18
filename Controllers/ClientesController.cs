@@ -36,13 +36,15 @@ namespace RastroFinoAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> CrearCliente(Cliente cliente)
         {
-            // Buscar si ya existe un cliente con ese email
+            if (cliente == null || string.IsNullOrEmpty(cliente.Nombre))
+                return BadRequest("Cliente inválido");
+
             var clienteExistente = await _context.Clientes
-       .FirstOrDefaultAsync(c => c.Email == cliente.Email);
-            // Si existe el cliente, devolvemelo sin crear uno nuevo
+                .FirstOrDefaultAsync(c => c.Email == cliente.Email);
+
             if (clienteExistente != null)
                 return Ok(clienteExistente);
-            // Si no existe, crearlo
+
             _context.Clientes.Add(cliente);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCliente), new { id = cliente.IdCliente }, cliente);
