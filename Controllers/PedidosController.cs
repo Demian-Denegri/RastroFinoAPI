@@ -37,7 +37,7 @@ namespace RastroFinoAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Pedido>> CrearPedido(Pedido pedido)
         {
-            pedido.Fecha = DateTime.Now; //le da la fecha y hora actual
+            pedido.Fecha = DateTime.UtcNow; //le da la fecha y hora actual
             _context.Pedidos.Add(pedido);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPedidos), new { id = pedido.IdPedido }, pedido);
